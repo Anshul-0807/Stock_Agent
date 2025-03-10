@@ -29,11 +29,7 @@ pip install -r requirements.txt
 3. Set up environment variables:
 Create a `.env` file in the root directory with the following variables:
 ```
-GROQ_API_KEY=your_groq_api_key
-ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
-NEWS_API_KEY=your_news_api_key
-TWITTER_API_KEY=your_twitter_api_key
-```
+
 
 ## Running the Application
 
