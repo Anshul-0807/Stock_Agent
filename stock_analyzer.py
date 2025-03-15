@@ -12,7 +12,7 @@ from ta.trend import SMAIndicator, MACD
 from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.volatility import BollingerBands, AverageTrueRange
 from duckduckgo_search import DDGS
-from typing import Any, Optional, Dict, Type
+from typing import Any, Optional, Dict, Type, List
 from pydantic import BaseModel, Field
 from scipy import stats
 from utils import calculate_risk_metrics
@@ -656,6 +656,81 @@ class StockAnalyzer:
                 'country': '',
                 'currency': ''
             }
+
+    def analyze_stock(self, symbol: str, analysis_types: List[str]) -> str:
+        """
+        Perform comprehensive stock analysis based on selected analysis types.
+        
+        Args:
+            symbol (str): The stock symbol to analyze
+            analysis_types (List[str]): List of analysis types to perform
+            
+        Returns:
+            str: Formatted analysis results
+        """
+        try:
+            # Fetch data first
+            self.fetch_data()
+            
+            # Initialize analysis results
+            analysis_results = []
+            
+            # Get basic stock info
+            stock_info = self.get_stock_info()
+            analysis_results.append(f"# Analysis for {stock_info['name']} ({symbol})")
+            analysis_results.append(f"**Sector:** {stock_info['sector']}")
+            analysis_results.append(f"**Industry:** {stock_info['industry']}")
+            analysis_results.append("---")
+            
+            # Perform selected analyses
+            for analysis_type in analysis_types:
+                if analysis_type == "Fundamental Analysis":
+                    fundamental_metrics = self.get_fundamental_metrics()
+                    analysis_results.append("## Fundamental Analysis")
+                    analysis_results.append("### Key Metrics")
+                    for metric, value in fundamental_metrics.items():
+                        analysis_results.append(f"- **{metric.replace('_', ' ').title()}:** {value}")
+                    analysis_results.append("---")
+                
+                elif analysis_type == "Technical Analysis":
+                    technical_indicators = self.get_technical_indicators()
+                    analysis_results.append("## Technical Analysis")
+                    analysis_results.append("### Technical Indicators")
+                    for indicator, value in technical_indicators.items():
+                        analysis_results.append(f"- **{indicator.replace('_', ' ').title()}:** {value}")
+                    analysis_results.append("---")
+                
+                elif analysis_type == "Risk Analysis":
+                    risk_metrics = self.get_risk_metrics()
+                    analysis_results.append("## Risk Analysis")
+                    analysis_results.append("### Risk Metrics")
+                    for metric, value in risk_metrics.items():
+                        analysis_results.append(f"- **{metric.replace('_', ' ').title()}:** {value}")
+                    analysis_results.append("---")
+                
+                elif analysis_type == "News Analysis":
+                    # Use the WebNewsTool for news analysis
+                    news_tool = WebNewsTool()
+                    news_analysis = news_tool._run(symbol)
+                    analysis_results.append("## News Analysis")
+                    analysis_results.append(news_analysis)
+                    analysis_results.append("---")
+                
+                elif analysis_type == "Portfolio Analysis":
+                    # Add portfolio analysis logic here
+                    analysis_results.append("## Portfolio Analysis")
+                    analysis_results.append("### Portfolio Metrics")
+                    analysis_results.append("- **Position Size:** Recommended based on risk tolerance")
+                    analysis_results.append("- **Risk Exposure:** Moderate")
+                    analysis_results.append("- **Diversification:** Consider sector exposure")
+                    analysis_results.append("---")
+            
+            # Combine all results
+            return "\n".join(analysis_results)
+            
+        except Exception as e:
+            print(f"Error in analyze_stock: {str(e)}")
+            return f"Error analyzing {symbol}: {str(e)}"
 
 # Example usage
 if __name__ == "__main__":

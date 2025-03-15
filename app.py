@@ -93,6 +93,19 @@ st.markdown("""
         margin: 0;
         font-weight: 600;
     }
+    /* Add styles for news analysis section */
+    .news-analysis {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+    .news-analysis h1, .news-analysis h2, .news-analysis h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .news-analysis p {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -1217,6 +1230,15 @@ if symbol:
             with add_col5:
                 st.metric(label="Net Profit Margin", value="N/A")
 
+        # Define analysis types
+        analysis_types = [
+            "Fundamental Analysis",
+            "Technical Analysis",
+            "Risk Analysis",
+            "News Analysis",
+            "Portfolio Analysis"
+        ]
+
         # Create tabs for different analyses
         tab1, tab2, tab3 = st.tabs(["AI Analysis", "Charts", "Financial Statements"])
         
@@ -1225,7 +1247,7 @@ if symbol:
                 with st.spinner('Generating comprehensive analysis... This may take a few minutes.'):
                     # Get AI analysis
                     analysis_result = st.session_state.analyzer.analyze_stock(symbol, analysis_types)
-                    st.markdown(analysis_result)
+                    st.markdown(f'<div class="news-analysis">{analysis_result}</div>', unsafe_allow_html=True)
         
         with tab2:
             # Historical price chart
